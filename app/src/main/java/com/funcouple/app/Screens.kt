@@ -241,9 +241,11 @@ fun HomeScreen(state: AppState, onOpen: (Screen) -> Unit) {
                 Text(state.name2, fontWeight = FontWeight.SemiBold, color = Fc.Violet, fontSize = 16.sp)
             }
         }
-        Spacer(Modifier.height(22.dp))
+        Spacer(Modifier.height(16.dp))
+        Entrance(3) { TogetherCard(state) }
+        Spacer(Modifier.height(16.dp))
         modes.forEachIndexed { index, mode ->
-            Entrance(index + 3) { ModeCard(mode) { onOpen(mode.screen) } }
+            Entrance(index + 4) { ModeCard(mode) { onOpen(mode.screen) } }
             Spacer(Modifier.height(12.dp))
         }
         val extras = listOf(
@@ -265,14 +267,14 @@ fun HomeScreen(state: AppState, onOpen: (Screen) -> Unit) {
             ),
         )
         extras.chunked(2).forEachIndexed { row, pair ->
-            Entrance(modes.size + 3 + row) {
+            Entrance(modes.size + 4 + row) {
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     pair.forEach { mode -> ModeTile(mode, Modifier.weight(1f)) { onOpen(mode.screen) } }
                 }
             }
             Spacer(Modifier.height(12.dp))
         }
-        Entrance(modes.size + 5) {
+        Entrance(modes.size + 6) {
             Row(
                 Modifier
                     .bounceClick { onOpen(Screen.Settings) }
@@ -356,6 +358,8 @@ fun SettingsScreen(state: AppState, onBack: () -> Unit, onOpen: (Screen) -> Unit
     var second by remember { mutableStateOf(state.name2) }
     var resetDone by remember { mutableStateOf(false) }
     var confirmReset by remember { mutableStateOf(false) }
+    var pickingSince by remember { mutableStateOf(false) }
+    if (pickingSince) SinceDialog(state) { pickingSince = false }
     val context = androidx.compose.ui.platform.LocalContext.current
     val biometricAvailable = remember { Biometrics.available(context) }
     if (confirmReset) {
@@ -393,6 +397,12 @@ fun SettingsScreen(state: AppState, onBack: () -> Unit, onOpen: (Screen) -> Unit
                     (first.trim() != state.name1 || second.trim() != state.name2),
             ) { state.saveNames(first, second) }
             Spacer(Modifier.height(8.dp))
+            SettingsRow(
+                FcIcon.HEART,
+                "Insieme dal",
+                state.since?.let(::formatDate) ?: "Scegliete la data: la home conterà i vostri giorni",
+                { pickingSince = true },
+            ) { Glyph(FcIcon.CHEVRON, size = 18.dp, tint = Fc.Muted) }
             val updater = state.updater
             val update = updater.status
             val scope = rememberCoroutineScope()

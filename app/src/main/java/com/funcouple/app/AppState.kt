@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import org.json.JSONArray
 import org.json.JSONObject
 import java.security.MessageDigest
+import java.time.LocalDate
 import kotlin.random.Random
 
 /** Carte speciali che ogni tanto escono dal mazzo di Verità o Obbligo. */
@@ -50,6 +51,15 @@ class AppState(context: Context) {
         name2 = second.trim()
         onboarded = true
         prefs.edit().putString("name1", name1).putString("name2", name2).putBoolean("onboarded", true).apply()
+    }
+
+    /** Giorno in cui la coppia si è messa insieme, se l'ha indicato. */
+    var since by mutableStateOf(if (prefs.contains("since")) LocalDate.ofEpochDay(prefs.getLong("since", 0)) else null)
+        private set
+
+    fun updateSince(date: LocalDate?) {
+        since = date
+        prefs.edit().apply { if (date == null) remove("since") else putLong("since", date.toEpochDay()) }.apply()
     }
 
     /** Riapre l'introduzione senza toccare i dati salvati. */
