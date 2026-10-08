@@ -9,7 +9,7 @@ App nativa in Kotlin e Jetpack Compose. Funziona offline e tutti i dati restano 
 ## Cosa c'è dentro
 
 - **Verità o Obbligo** — 240 carte su quattro livelli, modalità Escalation, carte speciali, penitenze
-- **Kamasutra** — 40 posizioni illustrate, preferite, traguardi e Maratona a tempo
+- **Kamasutra** — 500 posizioni illustrate (40 con scheda completa), preferite, traguardi e Maratona a tempo
 - **Dadi del Piacere** — dadi 3D: cosa, dove, per quanto e come
 - **Ruota del Desiderio** — dodici premi
 - **Non ho mai**, **Roulette dei Preliminari**, **Buoni del Piacere**
@@ -28,7 +28,7 @@ Servono Android Studio (o JDK 17+) e l'SDK Android 36.
 ./gradlew :app:assembleDebug
 ```
 
-- `tools/gen_positions.py` genera le posizioni del Kamasutra (`Positions.kt`)
+- `tools/gen_positions.py` genera le posizioni del Kamasutra (`Positions.kt`) e ne prepara le illustrazioni (`res/drawable-nodpi`) a partire da `assets-kamasutra/`
 - `tools/gen_sounds.py` genera gli effetti sonori
 - `release.command` compila l'APK e lo pubblica nelle Releases
 

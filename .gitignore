@@ -8,3 +8,4 @@ local.properties
 *.keystore
 *.jks
 /assets-kamasutra
+/app/src/main/res/drawable-nodpi

@@ -265,7 +265,7 @@ fun MarathonScreen(state: AppState, onBack: () -> Unit) {
                                 Spacer(Modifier.width(14.dp))
                                 Column(Modifier.weight(1f)) {
                                     Text(p.name, fontFamily = Fc.Display, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                                    Text(difficultyNames[p.difficulty], color = Fc.Muted, fontSize = 13.sp)
+                                    if (p.difficulty > 0) Text(difficultyNames[p.difficulty], color = Fc.Muted, fontSize = 13.sp)
                                 }
                                 // Cambia solo questa posizione con un'altra non ancora in scaletta.
                                 Box(
@@ -317,7 +317,7 @@ fun MarathonScreen(state: AppState, onBack: () -> Unit) {
                             }
                             Spacer(Modifier.height(10.dp))
                             Text(shown.name, fontFamily = Fc.Display, fontWeight = FontWeight.Bold, fontSize = 24.sp)
-                            Text(shown.tagline, fontStyle = FontStyle.Italic, fontFamily = Fc.Display, color = Fc.Rose, fontSize = 15.sp)
+                            if (shown.tagline.isNotEmpty()) Text(shown.tagline, fontStyle = FontStyle.Italic, fontFamily = Fc.Display, color = Fc.Rose, fontSize = 15.sp)
                         }
                     }
                     Spacer(Modifier.height(8.dp))
