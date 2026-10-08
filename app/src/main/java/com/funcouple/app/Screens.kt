@@ -33,6 +33,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -391,6 +393,41 @@ fun SettingsScreen(state: AppState, onBack: () -> Unit, onOpen: (Screen) -> Unit
                     (first.trim() != state.name1 || second.trim() != state.name2),
             ) { state.saveNames(first, second) }
             Spacer(Modifier.height(8.dp))
+            val updater = state.updater
+            val update = updater.status
+            val scope = rememberCoroutineScope()
+            SettingsRow(
+                FcIcon.DOWNLOAD,
+                when (update) {
+                    is Updater.Status.Available -> "Aggiornamento disponibile"
+                    is Updater.Status.Downloading -> "Scarico la ${update.version}…"
+                    is Updater.Status.Ready -> "Aggiornamento pronto"
+                    else -> "Aggiornamenti"
+                },
+                when (update) {
+                    Updater.Status.Idle -> "Versione ${updater.currentVersion}: tocca per controllare"
+                    Updater.Status.Checking -> "Controllo in corso…"
+                    Updater.Status.UpToDate -> "Versione ${updater.currentVersion}: hai già l'ultima"
+                    is Updater.Status.Available -> "Versione ${update.version}: tocca per scaricarla e installarla"
+                    is Updater.Status.Downloading -> "${(update.progress * 100).toInt()}% completato"
+                    is Updater.Status.Ready -> "Versione ${update.version}: tocca per installarla"
+                    is Updater.Status.Failed -> update.message
+                },
+                {
+                    when (update) {
+                        Updater.Status.Checking, is Updater.Status.Downloading -> Unit
+                        is Updater.Status.Available -> scope.launch { updater.download(update) }
+                        is Updater.Status.Ready -> updater.install(update)
+                        else -> scope.launch { updater.check() }
+                    }
+                },
+            ) {
+                when (update) {
+                    is Updater.Status.Available, is Updater.Status.Ready -> Glyph(FcIcon.DOWNLOAD, size = 22.dp, tint = Fc.Gold)
+                    Updater.Status.UpToDate -> Glyph(FcIcon.CHECK, size = 20.dp, tint = Fc.Gold)
+                    else -> Glyph(FcIcon.REPLAY, size = 18.dp, tint = Fc.Muted)
+                }
+            }
             SettingsRow(
                 FcIcon.SHIELD,
                 "Preferenze e limiti",

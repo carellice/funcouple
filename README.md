@@ -1,8 +1,10 @@
-# FunCouple
+<p align="center"><img src="docs/icon.svg" width="128" alt="Icona di FunCouple"></p>
+
+<h1 align="center">FunCouple</h1>
 
 Gioco per coppie per Android, in italiano. **Contenuti per adulti (18+).**
 
-App nativa in Kotlin e Jetpack Compose. Funziona offline, non chiede permessi di rete e tutti i dati restano sul dispositivo.
+App nativa in Kotlin e Jetpack Compose. Funziona offline e tutti i dati restano sul dispositivo: l'app va in rete solo quando chiedi di controllare gli aggiornamenti dalle impostazioni.
 
 ## Cosa c'è dentro
 
@@ -16,7 +18,7 @@ App nativa in Kotlin e Jetpack Compose. Funziona offline, non chiede permessi di
 
 ## Installazione
 
-Scarica l'APK dall'ultima [release](../../releases/latest) e aprilo sul telefono (Android 8 o successivo).
+Scarica l'APK dall'ultima [release](../../releases/latest) e aprilo sul telefono (Android 8 o successivo). Gli aggiornamenti successivi si scaricano dall'app: Impostazioni → Aggiornamenti.
 
 ## Compilare dal codice
 

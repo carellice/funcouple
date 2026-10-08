@@ -328,6 +328,8 @@ class AppState(context: Context) {
         if (value) tilt.start() else tilt.stop()
     }
 
+    val updater = Updater(context)
+
     var soundOn by mutableStateOf(prefs.getBoolean("sound", true))
         private set
 
