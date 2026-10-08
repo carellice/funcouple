@@ -213,7 +213,7 @@ private fun StepControls(timer: StepTimer, colors: List<Color>) {
 
 @Composable
 fun MarathonScreen(state: AppState, onBack: () -> Unit) {
-    val picks = remember { positions.shuffled().take(4) }
+    var picks by remember { mutableStateOf(positions.shuffled().take(4)) }
     val timer = remember { StepTimer(List(picks.size) { 60 }) }
     val colors = listOf(Fc.Violet, Fc.DeepViolet)
     timer.Run()
@@ -238,7 +238,8 @@ fun MarathonScreen(state: AppState, onBack: () -> Unit) {
             when {
                 !timer.started -> {
                     Text(
-                        "Quattro posizioni, un minuto ciascuna. Il timer avanza da solo: posate il telefono e seguite il ritmo.",
+                        "Quattro posizioni, un minuto ciascuna. Se una non vi convince, cambiatela. " +
+                            "Poi il timer avanza da solo: posate il telefono e seguite il ritmo.",
                         color = Fc.Muted,
                         fontSize = 15.sp,
                         lineHeight = 21.sp,
@@ -262,16 +263,27 @@ fun MarathonScreen(state: AppState, onBack: () -> Unit) {
                                         .background(Color.Black.copy(alpha = 0.22f)),
                                 )
                                 Spacer(Modifier.width(14.dp))
-                                Column {
+                                Column(Modifier.weight(1f)) {
                                     Text(p.name, fontFamily = Fc.Display, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                                     Text(difficultyNames[p.difficulty], color = Fc.Muted, fontSize = 13.sp)
                                 }
+                                // Cambia solo questa posizione con un'altra non ancora in scaletta.
+                                Box(
+                                    Modifier
+                                        .bounceClick { picks = picks.toMutableList().also { it[i] = (positions - picks.toSet()).random() } }
+                                        .padding(12.dp),
+                                ) { Glyph(FcIcon.REPLAY, size = 20.dp, tint = Fc.Muted) }
                             }
                         }
                         Spacer(Modifier.height(10.dp))
                     }
                     Spacer(Modifier.weight(1f))
-                    GradientButton("Inizia la maratona", Modifier.fillMaxWidth(), colors, icon = FcIcon.PLAY) { timer.start() }
+                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        GhostButton("Rimescola", Modifier.weight(1f), FcIcon.REPLAY) {
+                            picks = (positions - picks.toSet()).shuffled().take(picks.size)
+                        }
+                        GradientButton("Inizia", Modifier.weight(1f), colors, icon = FcIcon.PLAY) { timer.start() }
+                    }
                 }
 
                 timer.finished -> {
