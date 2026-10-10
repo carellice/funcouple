@@ -14,6 +14,7 @@ App nativa in Kotlin e Jetpack Compose. Funziona offline e tutti i dati restano 
 - **Ruota del Desiderio** — dodici premi
 - **Non ho mai**, **Roulette dei Preliminari**, **Buoni del Piacere**
 - **Le vostre carte** — verità e obblighi scritti da voi
+- **Giorni insieme** — contatore nella home dell'app e widget per la schermata principale del telefono
 - **Preferenze e limiti**, blocco con PIN o biometria, suoni, "luci basse", effetto 3D
 
 ## Installazione

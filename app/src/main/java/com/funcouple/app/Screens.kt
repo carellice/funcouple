@@ -403,6 +403,14 @@ fun SettingsScreen(state: AppState, onBack: () -> Unit, onOpen: (Screen) -> Unit
                 state.since?.let(::formatDate) ?: "Scegliete la data: la home conterà i vostri giorni",
                 { pickingSince = true },
             ) { Glyph(FcIcon.CHEVRON, size = 18.dp, tint = Fc.Muted) }
+            if (remember { TogetherWidget.canPin(context) }) {
+                SettingsRow(
+                    FcIcon.SPARKLE,
+                    "Widget nella home",
+                    "Aggiungi il contatore dei giorni insieme alla schermata principale",
+                    { TogetherWidget.requestPin(context) },
+                ) { Glyph(FcIcon.PLUS, size = 18.dp, tint = Fc.Muted) }
+            }
             val updater = state.updater
             val update = updater.status
             val scope = rememberCoroutineScope()

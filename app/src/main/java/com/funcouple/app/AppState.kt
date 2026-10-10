@@ -26,7 +26,7 @@ data class CustomCard(val id: Long, val author: Int, val level: Int, val truth: 
 const val ESCALATION_STEP = 6
 
 /** Stato persistente dell'app: tutto resta solo sul dispositivo. */
-class AppState(context: Context) {
+class AppState(private val context: Context) {
     private val prefs = context.getSharedPreferences("funcouple", Context.MODE_PRIVATE)
 
     var onboarded by mutableStateOf(prefs.getBoolean("onboarded", false))
@@ -59,7 +59,9 @@ class AppState(context: Context) {
 
     fun updateSince(date: LocalDate?) {
         since = date
-        prefs.edit().apply { if (date == null) remove("since") else putLong("since", date.toEpochDay()) }.apply()
+        // commit e non apply: il widget rilegge subito la data dalle preferenze.
+        prefs.edit().apply { if (date == null) remove("since") else putLong("since", date.toEpochDay()) }.commit()
+        TogetherWidget.refresh(context)
     }
 
     /** Riapre l'introduzione senza toccare i dati salvati. */

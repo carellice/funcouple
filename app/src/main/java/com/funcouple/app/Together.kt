@@ -50,10 +50,10 @@ fun formatDate(date: LocalDate): String = date.format(longDate)
 
 private fun count(n: Int, one: String, many: String) = if (n == 1) "1 $one" else "$n $many"
 
-private fun thousands(n: Int) = "%,d".format(Locale.ITALIAN, n)
+fun thousands(n: Int) = "%,d".format(Locale.ITALIAN, n)
 
 /** "3 anni, 4 mesi e 12 giorni", saltando le parti a zero. */
-private fun elapsed(period: Period): String {
+fun elapsed(period: Period): String {
     val parts = listOfNotNull(
         count(period.years, "anno", "anni").takeIf { period.years > 0 },
         count(period.months, "mese", "mesi").takeIf { period.months > 0 },
@@ -63,7 +63,7 @@ private fun elapsed(period: Period): String {
 }
 
 /** La ricorrenza di oggi, se c'è, altrimenti quanto manca al prossimo anniversario. */
-private fun milestone(since: LocalDate, today: LocalDate): String {
+fun milestone(since: LocalDate, today: LocalDate): String {
     val period = Period.between(since, today)
     val days = ChronoUnit.DAYS.between(since, today).toInt()
     val left = ChronoUnit.DAYS.between(today, since.plusYears(period.years + 1L)).toInt()
