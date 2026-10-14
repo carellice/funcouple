@@ -155,6 +155,7 @@ enum class FcIcon(private vararg val parts: String) {
         "M12 12.5c0 3 -0.2 5.500 -0.700 8",
     ),
     DOWNLOAD("M12 4v11M7.5 11l4.5 4.5 4.500 -4.500", "M5 19.5h14"),
+    UPLOAD("M12 15.5V4.5M7.5 9l4.5 -4.5 4.500 4.500", "M5 19.5h14"),
     PLAY("M7 4.500l12 7.500 -12 7.500z"),
     ;
 

@@ -16,6 +16,7 @@ App nativa in Kotlin e Jetpack Compose. Funziona offline e tutti i dati restano 
 - **Le vostre carte** — verità e obblighi scritti da voi
 - **Giorni insieme** — contatore nella home dell'app e widget per la schermata principale del telefono
 - **Preferenze e limiti**, blocco con PIN o biometria, suoni, "luci basse", effetto 3D
+- **Backup** — esporta tutti i dati in un file e importali su un altro telefono
 
 ## Installazione
 

@@ -6,6 +6,9 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import android.app.Activity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -361,6 +364,30 @@ fun SettingsScreen(state: AppState, onBack: () -> Unit, onOpen: (Screen) -> Unit
     var pickingSince by remember { mutableStateOf(false) }
     if (pickingSince) SinceDialog(state) { pickingSince = false }
     val context = androidx.compose.ui.platform.LocalContext.current
+    var exportResult by remember { mutableStateOf<Boolean?>(null) }
+    var importFailed by remember { mutableStateOf(false) }
+    var confirmImport by remember { mutableStateOf(false) }
+    val exporter = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
+        if (uri != null) exportResult = Backup.export(context, uri)
+    }
+    val importer = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) {
+            // Riaprendo la schermata l'app rilegge tutti i dati appena ripristinati.
+            if (Backup.import(context, uri)) (context as? Activity)?.recreate() else importFailed = true
+        }
+    }
+    if (confirmImport) {
+        ConfirmDialog(
+            "Importare un backup?",
+            "Tutti i dati attuali verranno sostituiti con quelli del file: nomi, progressi, carte, impostazioni e PIN.",
+            "Scegli il file",
+            onConfirm = {
+                confirmImport = false
+                importer.launch(arrayOf("application/json", "application/octet-stream", "text/plain"))
+            },
+            onDismiss = { confirmImport = false },
+        )
+    }
     val biometricAvailable = remember { Biometrics.available(context) }
     if (confirmReset) {
         ConfirmDialog(
@@ -496,6 +523,22 @@ fun SettingsScreen(state: AppState, onBack: () -> Unit, onOpen: (Screen) -> Unit
             ) {
                 Box(Modifier.alpha(if (biometricAvailable && state.hasPin) 1f else 0.35f)) { Toggle(state.biometric) }
             }
+            SettingsRow(
+                FcIcon.DOWNLOAD,
+                "Esporta backup",
+                when (exportResult) {
+                    true -> "Backup salvato: copialo sul nuovo telefono e importalo da qui"
+                    false -> "Non sono riuscito a salvare il backup: riprova"
+                    null -> "Salva tutti i dati in un file, per portarli su un altro telefono"
+                },
+                { exporter.launch("funcouple-backup-${java.time.LocalDate.now()}.json") },
+            ) { Glyph(if (exportResult == true) FcIcon.CHECK else FcIcon.CHEVRON, size = 18.dp, tint = if (exportResult == true) Fc.Gold else Fc.Muted) }
+            SettingsRow(
+                FcIcon.UPLOAD,
+                "Importa backup",
+                if (importFailed) "Il file scelto non è un backup di FunCouple" else "Ripristina i dati da un file di backup",
+                { confirmImport = true },
+            ) { Glyph(FcIcon.CHEVRON, size = 18.dp, tint = Fc.Muted) }
             Column(
                 Modifier
                     .fillMaxWidth()
